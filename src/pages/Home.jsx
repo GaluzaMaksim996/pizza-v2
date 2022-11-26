@@ -7,25 +7,27 @@ import Sort from '../components/Sort';
 const Home = () => {
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeCategory, setActiveCategory] = useState(0);
+
 
   const pizzas = items.map((item) => <PizzaBlock key={item.id} {...item} />);
   const skeletons = [...new Array(6)].map((_, index) => <Skeleton key={index} />);
 
   useEffect(() => {
     setIsLoading(true);
-
-    fetch(`https://636fc345bb9cf402c81f2e03.mockapi.io/items`)
+    const category = activeCategory ? `?category=${activeCategory}` : ''
+    fetch(`https://636fc345bb9cf402c81f2e03.mockapi.io/items/${category}`)
       .then((res) => res.json())
       .then((json) => {
         setItems(json);
         setIsLoading(false);
       });
-  }, []);
+  }, [activeCategory]);
 
   return (
     <div className="container">
       <div className="content__top">
-        <Categories />
+        <Categories activeCategory={activeCategory} setActiveCategory={setActiveCategory} />
         <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>

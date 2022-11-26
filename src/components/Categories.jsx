@@ -1,7 +1,4 @@
-import { useState } from 'react';
-
-const Categories = () => {
-  const [activeCategory, setActiveCategory] = useState(0);
+const Categories = ({activeCategory, setActiveCategory}) => {
 
   const categories = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые'];
 
