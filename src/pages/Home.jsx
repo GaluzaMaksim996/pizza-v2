@@ -11,11 +11,9 @@ import Sort from '../components/Sort';
 const Home = () => {
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [activeCategory, setActiveCategory] = useState(0);
-  // const [currentPage, setCurrentPage] = useState(1);
-  const [activeSort, setActiveSort] = useState({ name: 'популярности', sortProperty: 'rating' });
 
-  const currentPage = useSelector((state) => state.filter.currentPage);
+  const currentPage = useSelector((state) => state.pagination.currentPage);
+  const { activeCategory, activeSort } = useSelector((state) => state.filter);
 
   const { searchValue } = useContext(SearchContext);
 
@@ -42,8 +40,8 @@ const Home = () => {
   return (
     <div className="container">
       <div className="content__top">
-        <Categories activeCategory={activeCategory} setActiveCategory={setActiveCategory} />
-        <Sort activeSort={activeSort} setActiveSort={setActiveSort} />
+        <Categories />
+        <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">{isLoading ? skeletons : pizzas}</div>
