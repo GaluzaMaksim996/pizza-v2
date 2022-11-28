@@ -1,4 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+
 import { SearchContext } from '../App';
 import Categories from '../components/Categories';
 import Pagination from '../components/Pagination';
@@ -10,9 +12,11 @@ const Home = () => {
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
   const [activeSort, setActiveSort] = useState({ name: 'популярности', sortProperty: 'rating' });
-  
+
+  const currentPage = useSelector((state) => state.filter.currentPage);
+
   const { searchValue } = useContext(SearchContext);
 
   const pizzas = items.map((item) => <PizzaBlock key={item.id} {...item} />);
@@ -43,7 +47,7 @@ const Home = () => {
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">{isLoading ? skeletons : pizzas}</div>
-      <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} />
+      <Pagination />
     </div>
   );
 };
