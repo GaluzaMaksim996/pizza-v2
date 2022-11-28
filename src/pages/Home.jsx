@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -26,13 +27,12 @@ const Home = () => {
     const category = activeCategory ? `category=${activeCategory}` : '';
     const sortType = activeSort.sortProperty.replace('-', '');
     const order = activeSort.sortProperty.includes('-') ? 'desc' : 'asc';
-
-    fetch(
-      `https://636fc345bb9cf402c81f2e03.mockapi.io/items/?page=${currentPage}&limit=4&${category}&sortBy=${sortType}&order=${order}&search=${searchValue}`,
-    )
-      .then((res) => res.json())
-      .then((json) => {
-        setItems(json);
+    axios
+      .get(
+        `https://636fc345bb9cf402c81f2e03.mockapi.io/items/?page=${currentPage}&limit=4&${category}&sortBy=${sortType}&order=${order}&search=${searchValue}`,
+      )
+      .then((res) => {
+        setItems(res.data);
         setIsLoading(false);
       });
   }, [activeCategory, activeSort.sortProperty, searchValue, currentPage]);
