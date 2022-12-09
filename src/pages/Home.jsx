@@ -20,9 +20,8 @@ const Home = () => {
 
   const currentPage = useSelector((state) => state.filter.currentPage);
   const { items, status } = useSelector((state) => state.pizza);
+  const searchValue = useSelector((state) => state.filter.searchValue);
   const { activeCategory, activeSort } = useSelector((state) => state.filter);
-
-  const { searchValue } = useContext(SearchContext);
 
   const pizzas = items.map((item) => <PizzaBlock key={item.id} {...item} />);
   const skeletons = [...new Array(6)].map((_, index) => <Skeleton key={index} />);
