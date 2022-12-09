@@ -12,7 +12,7 @@ const CartItem = ({ id, title, type, size, price, count, imageUrl }) => {
       }),
     );
   };
-  console.log(count);
+
   const onClickMinus = () => {
     dispatch(minusItem(id));
   };
