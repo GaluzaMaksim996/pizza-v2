@@ -1,4 +1,4 @@
-import { createContext } from 'react';
+import React from 'react'
 import { Routes, Route } from 'react-router-dom';
 
 import Header from './components/Header';
@@ -7,8 +7,6 @@ import FullPizza from './pages/FullPizza';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import './scss/app.scss';
-
-export const SearchContext = createContext();
 
 function App() {
   return (
