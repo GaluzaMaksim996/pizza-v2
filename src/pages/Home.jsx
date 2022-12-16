@@ -9,7 +9,7 @@ import PizzaBlock from '../components/PizzaBlock';
 import { Skeleton } from '../components/Skeleton';
 import Sort, { sortList } from '../components/Sort';
 import { setFilters } from '../redux/filter/slice';
-import { fetchPizzas } from '../redux/slices/asyncActions';
+import { fetchPizzas } from '../redux/pizza/asyncActions';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -27,13 +27,13 @@ const Home = () => {
 
   const getPizzas = async () => {
     const category = categoryId ? `category=${categoryId}` : '';
-    const sortType = sort.sortProperty.replace('-', '');
+    const sortBy = sort.sortProperty.replace('-', '');
     const order = sort.sortProperty.includes('-') ? 'desc' : 'asc';
 
     dispatch(
       fetchPizzas({
         category,
-        sortType,
+        sortBy,
         order,
         currentPage,
         searchValue,
