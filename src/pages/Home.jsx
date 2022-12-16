@@ -8,7 +8,7 @@ import Pagination from '../components/Pagination';
 import PizzaBlock from '../components/PizzaBlock';
 import { Skeleton } from '../components/Skeleton';
 import Sort, { sortList } from '../components/Sort';
-import { setFilters } from '../redux/slices/filterSlice';
+import { setFilters } from '../redux/filter/slice';
 import { fetchPizzas } from '../redux/slices/asyncActions';
 
 const Home = () => {
@@ -20,15 +20,15 @@ const Home = () => {
   const currentPage = useSelector((state) => state.filter.currentPage);
   const { items, status } = useSelector((state) => state.pizza);
   const searchValue = useSelector((state) => state.filter.searchValue);
-  const { activeCategory, activeSort } = useSelector((state) => state.filter);
+  const { categoryId, sort } = useSelector((state) => state.filter);
 
   const pizzas = items.map((item) => <PizzaBlock key={item.id} {...item} />);
   const skeletons = [...new Array(6)].map((_, index) => <Skeleton key={index} />);
 
   const getPizzas = async () => {
-    const category = activeCategory ? `category=${activeCategory}` : '';
-    const sortType = activeSort.sortProperty.replace('-', '');
-    const order = activeSort.sortProperty.includes('-') ? 'desc' : 'asc';
+    const category = categoryId ? `category=${categoryId}` : '';
+    const sortType = sort.sortProperty.replace('-', '');
+    const order = sort.sortProperty.includes('-') ? 'desc' : 'asc';
 
     dispatch(
       fetchPizzas({
@@ -44,7 +44,7 @@ const Home = () => {
   useEffect(() => {
     if (window.location.search) {
       const params = qs.parse(window.location.search.substring(1));
-      params.activeSort = sortList.find((obj) => obj.sortProperty === params.activeSort);
+      params.sort = sortList.find((obj) => obj.sortProperty === params.sort);
 
       dispatch(setFilters(params));
 
@@ -58,13 +58,13 @@ const Home = () => {
     }
 
     isSearch.current = false;
-  }, [activeCategory, activeSort.sortProperty, searchValue, currentPage]);
+  }, [categoryId, sort.sortProperty, searchValue, currentPage]);
 
   useEffect(() => {
     if (isMounted.current) {
       const queryString = qs.stringify({
-        activeSort: activeSort.sortProperty,
-        activeCategory,
+        sort: sort.sortProperty,
+        categoryId,
         currentPage,
       });
 
@@ -72,7 +72,7 @@ const Home = () => {
     }
 
     isMounted.current = true;
-  }, [activeCategory, activeSort.sortProperty, currentPage]);
+  }, [categoryId, sort.sortProperty, currentPage]);
 
   return (
     <div className="container">
