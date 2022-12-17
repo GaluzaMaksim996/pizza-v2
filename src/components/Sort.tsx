@@ -1,32 +1,48 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { selectFilter } from '../redux/filter/selectors';
 import { setSort } from '../redux/filter/slice';
+import { Sort as SortType,SortPropertyEnum } from '../redux/filter/types';
 
-export const sortList = [
-  { name: 'популярности возр', sortProperty: 'rating' },
-  { name: 'популярности убыв', sortProperty: '-rating' },
-  { name: 'цене возр', sortProperty: 'price' },
-  { name: 'цене убыв', sortProperty: '-price' },
-  { name: 'алфавиту возр', sortProperty: 'title' },
-  { name: 'алфавиту убыв', sortProperty: '-title' },
+type SortItem = {
+  name: string;
+  sortProperty: SortPropertyEnum;
+};
+
+type PopupClick = MouseEvent & {
+  path: Node[];
+};
+
+type SortPopupProps = {
+  value: SortType;
+};
+
+export const sortList: SortItem[] = [
+  { name: 'популярности возр', sortProperty: SortPropertyEnum.RATING_DESC },
+  { name: 'популярности убыв', sortProperty: SortPropertyEnum.RATING_ASC },
+  { name: 'цене возр', sortProperty: SortPropertyEnum.PRICE_DESC  },
+  { name: 'цене убыв', sortProperty: SortPropertyEnum.PRICE_ASC },
+  { name: 'алфавиту возр', sortProperty: SortPropertyEnum.TITLE_DESC },
+  { name: 'алфавиту убыв', sortProperty: SortPropertyEnum.TITLE_ASC },
 ];
 
-const Sort = () => {
+const Sort: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const activeSort = useSelector((state) => state.filter.sort);
+  const {sort} = useSelector(selectFilter);
   const dispatch = useDispatch();
 
-  const sortRef = useRef();
+  const sortRef = useRef<HTMLDivElement>(null);
 
-  const onClickSort = (sort) => {
-    dispatch(setSort(sort));
+  const onClickSort = (obj: SortItem) => {
+    dispatch(setSort(obj));
     setIsOpen(false);
   };
 
   useEffect(() => {
-    const onClickOutside = (e) => {
-      if (sortRef.current && !e.path.includes(sortRef.current)) {
+    const onClickOutside = (e: MouseEvent) => {
+      const _event = e as PopupClick
+      if (sortRef.current && !_event.path.includes(sortRef.current)) {
         setIsOpen(false);
       }
     };
@@ -52,16 +68,16 @@ const Sort = () => {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setIsOpen(!isOpen)}>{activeSort.name}</span>
+        <span onClick={() => setIsOpen(!isOpen)}>{sort.name}</span>
       </div>
       {isOpen && (
         <div className="sort__popup">
           <ul>
-            {sortList.map((sort, i) => (
+            {sortList.map((obj, i) => (
               <li
                 key={i}
                 onClick={() => onClickSort(sort)}
-                className={sort.sortProperty === activeSort.sortProperty ? 'active' : ''}
+                className={obj.sortProperty === sort.sortProperty ? 'active' : ''}
               >
                 {sort.name}
               </li>
